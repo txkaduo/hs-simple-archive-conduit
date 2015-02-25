@@ -38,15 +38,36 @@ autoExtractFiles :: (MonadError String m, Functor m) =>
     [SomeDetectiveArchive]
     -> Conduit ByteString m FileEntry
 autoExtractFiles []                                         = mempty
-autoExtractFiles (SomeDetectiveArchive x convert_err:xs)    = do
+autoExtractFiles (ax@(SomeDetectiveArchive x _):xs)    = do
     (matched, bs) <- magicMatch x
     leftover $ LB.toStrict bs
     if matched
-        then do
-            transPipe (\me -> runExceptT me >>= either (throwError . err_to_str) return) $
-                            transPipe convert_err $ extractEntries x
+        then extractFilesByDetectiveArchive ax
         else autoExtractFiles xs
+
+
+extractFilesByDetectiveArchive :: (MonadError String m, Functor m) =>
+    SomeDetectiveArchive
+    -> Conduit ByteString m FileEntry
+extractFilesByDetectiveArchive (SomeDetectiveArchive x convert_err) =
+    transPipe (\me -> runExceptT me >>= either (throwError . err_to_str) return) $
+                    transPipe convert_err $ extractEntries x
     where
         err_to_str e = "Failed to extract files by format "
                             ++ show (formatName x)
                             ++ ": " ++ e
+
+
+-- | detect archive format from bytestring
+-- NOTE: This functions will put back any bytes it possible consumed.
+--       So the upstream conduit can be reused from the begining.
+autoDetectArchive :: (Monad m) =>
+    [SomeDetectiveArchive]
+    -> Sink ByteString m (Maybe SomeDetectiveArchive)
+autoDetectArchive []                                    = return Nothing
+autoDetectArchive (ax@(SomeDetectiveArchive x _):xs)    = do
+    (matched, bs) <- magicMatch x
+    leftover $ LB.toStrict bs
+    if matched
+        then return $ Just ax
+        else autoDetectArchive xs
