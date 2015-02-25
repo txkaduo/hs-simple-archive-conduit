@@ -88,12 +88,10 @@ executable test-file
 
   if flag(bz)
     build-depends:      bzlib-conduit
-    exposed-modules:    Codec.Archive.Smooth.BZ
     cpp-options:        -DHAVE_BZ
 
   if flag(xz)
     build-depends:      lzma-conduit
-    exposed-modules:    Codec.Archive.Smooth.XZ
     cpp-options:        -DHAVE_XZ
 
   default-extensions:   TypeFamilies
