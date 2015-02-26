@@ -31,7 +31,15 @@ autoDecompress x = do
 autoDecompressByCompressors ::
         (MonadBase base m, PrimMonad base, MonadThrow m, MonadResource m) =>
         [SomeDetectiveCompressor] -> Conduit ByteString m ByteString
-autoDecompressByCompressors = mconcat . map (\(SomeDetectiveCompressor x) -> autoDecompress x)
+autoDecompressByCompressors = go
+    where
+        go []       = awaitForever yield
+        go (SomeDetectiveCompressor x:xs)   = do
+                        (matched, bs) <- magicMatch x
+                        leftover $ LB.toStrict bs
+                        if matched
+                            then decompress x
+                            else go xs
 
 
 autoExtractFiles :: (MonadError String m, Functor m) =>
