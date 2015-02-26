@@ -25,7 +25,7 @@ autoDecompress x = do
     leftover $ LB.toStrict bs
     if matched
         then decompress x
-        else mempty
+        else awaitForever yield
 
 
 autoDecompressByCompressors ::
