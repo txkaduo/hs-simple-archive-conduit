@@ -1,20 +1,18 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
 module Codec.Archive.Smooth.Tar where
 
 import Prelude 
+
 import Codec.Archive.Smooth.Types
-import Control.Monad
-import Data.Conduit.Binary                  (sinkLbs)
-import Data.Conduit                         (yield, mapOutputMaybe)
-import Control.Monad.Error.Class
-import Data.Monoid                          (mconcat)
+import Data.Conduit
 import Codec.Archive.Tar.Entry              (fromTarPath, entryTarPath)
 import qualified Data.ByteString.Lazy       as LB
 import qualified Data.ByteString.Lazy.Char8 as LBC8
 import qualified Codec.Archive.Tar          as Tar
-import qualified Data.Conduit.List          as CL
+-- import qualified Data.Conduit.List          as CL
 import qualified Data.Conduit.Binary        as CB
-import qualified Blaze.ByteString.Builder   as Blaze
+-- import qualified Blaze.ByteString.Builder   as Blaze
 
 data SimpleTar = SimpleTar
                 deriving (Show)

@@ -1,13 +1,16 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
 module Codec.Archive.Smooth.Zip where
 
 import Prelude 
 import Codec.Archive.Smooth.Types
 import Control.Monad
-import Data.Conduit.Binary                  (sinkLbs)
 import Data.Conduit                         (yield)
 import Control.Monad.Error.Class
+#if MIN_VERSION_base(4, 8, 0)
+#else
 import Data.Monoid                          (mconcat)
+#endif
 import qualified Data.ByteString.Lazy       as LB
 import qualified Codec.Archive.Zip          as Zip
 import qualified Data.Conduit.List          as CL

@@ -2,17 +2,14 @@ module Codec.Archive.Smooth.Function where
 
 import Prelude
 import Data.Conduit
-import Data.Monoid
-import Control.Monad                        (liftM)
 import Control.Monad.Error.Class
-import Control.Monad.Trans.Class
 import qualified Data.ByteString.Lazy       as LB
 import Data.ByteString                      (ByteString)
 import Control.Monad.Catch                  (MonadThrow)
 import Control.Monad.Primitive              (PrimMonad)
 import Control.Monad.Base                   (MonadBase)
 import Control.Monad.Trans.Resource         (MonadResource)
-import Control.Monad.Trans.Except           (runExceptT, ExceptT(..))
+import Control.Monad.Trans.Except           (runExceptT)
 
 import Codec.Archive.Smooth.Types
 
