@@ -87,6 +87,7 @@ library
 
 executable test-file
   main-is:        test-file.hs
+  hs-source-dirs:   test
   build-depends:    base
                   , simple-archive-conduit
                   , bytestring
