@@ -84,6 +84,7 @@ library
                         MultiParamTypeClasses
                         FlexibleInstances
                         ExistentialQuantification
+                        CPP
 
 executable test-file
   main-is:        test-file.hs

@@ -11,14 +11,14 @@ import Control.Monad.Trans.Resource
 
 testFile :: String -> IO ()
 testFile fp = do
-    err_or_names <- runExceptT $ runResourceT $
+    err_or_names <- runResourceT $ runExceptT $ runConduit $
                         (if fp == "-"
                             then sourceHandle stdin
                             else sourceFile fp)
-                        $= autoDecompressByCompressors allKnownDetectiveCompressors
-                        $= autoExtractFiles allKnownDetectiveArchives
-                        $= CL.map feName
-                        $$ CL.consume
+                        .| autoDecompressByCompressors allKnownDetectiveCompressors
+                        .| autoExtractFiles allKnownDetectiveArchives
+                        .| CL.map feName
+                        .| CL.consume
     case err_or_names of
         Left err -> do
             hPutStrLn stderr $ "error when reading file '" ++ fp

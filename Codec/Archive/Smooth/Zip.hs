@@ -4,7 +4,6 @@ module Codec.Archive.Smooth.Zip where
 import Prelude 
 import Codec.Archive.Smooth.Types
 import Control.Monad
-import Data.Conduit.Binary                  (sinkLbs)
 import Data.Conduit                         (yield)
 import Control.Monad.Error.Class
 import Data.Monoid                          (mconcat)

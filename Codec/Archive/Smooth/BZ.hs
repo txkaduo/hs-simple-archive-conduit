@@ -3,15 +3,7 @@ module Codec.Archive.Smooth.BZ where
 
 import Prelude 
 import Codec.Archive.Smooth.Types
-import Control.Monad
-import Data.Conduit.Binary                  (sinkLbs)
-import Data.Conduit                         (yield)
-import Control.Monad.Error.Class
-import Data.Monoid                          (mconcat)
-import qualified Data.ByteString.Lazy       as LB
-import qualified Data.Conduit.List          as CL
 import qualified Data.Conduit.Binary        as CB
-import qualified Blaze.ByteString.Builder   as Blaze
 import qualified Data.Conduit.BZlib         as BZlib
 
 data SimpleBZ = SimpleBZ
