@@ -2,12 +2,14 @@
 module Codec.Archive.Smooth.Tar where
 
 import Prelude 
+import Control.Exception.Safe
+import Control.Monad.Error.Class
+import Control.Monad (when)
 import Codec.Archive.Smooth.Types
-import Data.Conduit                         (mapOutputMaybe)
-import Codec.Archive.Tar.Entry              (fromTarPath, entryTarPath)
+import Data.Conduit
 import qualified Data.ByteString.Lazy       as LB
 import qualified Data.ByteString.Lazy.Char8 as LBC8
-import qualified Codec.Archive.Tar          as Tar
+import qualified Data.Conduit.Tar           as CT
 import qualified Data.Conduit.Binary        as CB
 
 data SimpleTar = SimpleTar
@@ -28,16 +30,14 @@ instance FormatDetect SimpleTar where
 
 
 instance HasCodecError SimpleTar where
-    type SimpleCodecError SimpleTar = Tar.FormatError
+    type SimpleCodecError SimpleTar = SomeException
 
 
 instance SimpleArchive SimpleTar where
-    extractEntries _ = mapOutputMaybe to_fe Tar.conduitEntry
+  extractEntries _ = transPipe (either throwError pure) (CT.untarChunks .| CT.withEntries conv_entry)
         where
-            to_fe tfe = case Tar.entryContent tfe of
-                Tar.NormalFile content _    ->
-                            return $ FileEntry
-                                        (fromTarPath $ entryTarPath tfe)
-                                        content
-                _   -> Nothing
+            conv_entry hdr = do
+              when (CT.headerFileType hdr == CT.FTNormal) $ do
+                lbs <- CB.sinkLbs
+                yield $ FileEntry (CT.headerFilePath hdr) lbs
 

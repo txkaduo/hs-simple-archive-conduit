@@ -53,6 +53,7 @@ library
                       , blaze-builder
                       , zip-archive
                       , tar-conduit
+                      , safe-exceptions
 
   if flag(bz)
     build-depends:      bzlib-conduit

@@ -17,11 +17,11 @@ import Control.Monad.Trans.Except           (ExceptT(..))
 
 
 -- | a File in archive
-data FileEntry = FileEntry {
-                    feName          :: String
-                    , feContent     :: LB.ByteString
-                }
-                deriving (Show)
+data FileEntry = FileEntry
+                  { feName          :: String
+                  , feContent     :: LB.ByteString
+                  }
+                  deriving (Show)
 
 
 class FormatDetect a where
@@ -47,7 +47,7 @@ class HasCodecError a where
     type SimpleCodecError a
 
 class HasCodecError a => SimpleArchive a where
-    -- | extrace FileEntry from stream
+    -- | extract FileEntry from stream
     extractEntries :: MonadError (SimpleCodecError a) m
                    => a
 #if MIN_VERSION_conduit(1, 3, 0)
