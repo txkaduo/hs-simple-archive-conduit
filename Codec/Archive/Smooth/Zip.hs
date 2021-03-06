@@ -6,7 +6,9 @@ import Codec.Archive.Smooth.Types
 import Control.Monad
 import Data.Conduit                         (yield)
 import Control.Monad.Error.Class
+#if !MIN_VERSION_base(4, 13, 0)
 import Data.Monoid                          (mconcat)
+#endif
 import qualified Data.ByteString.Lazy       as LB
 import qualified Codec.Archive.Zip          as Zip
 import qualified Data.Conduit.List          as CL
