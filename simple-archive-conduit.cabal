@@ -21,7 +21,7 @@ Flag bz
 
 Flag xz
     Description:      Support xz
-    Default:          True
+    Default:          False
 
 Flag dev
     Description:   Turn on development settings, like auto-reload templates.
